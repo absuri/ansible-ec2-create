@@ -1,0 +1,18 @@
+---
+- hosts: 34.194.147.88
+  user: root
+  tasks: 
+    - name: create dict
+      file: 
+       path: /home/ec2-user/test
+       state: directory
+    - name: Get speedtest-cli from git
+      git: repo=https://github.com/sivel/speedtest-cli.git dest=/home/ec2-user/test/
+
+    - name: Change to speedtest-cli directory and install it
+      become: yes
+      command: chdir=/home/ec2-user/test/ python setup.py install
+    - name: cmd run check speed test
+      shell: /usr/bin/speedtest-cli --share > file.txt
+    - name: get the source file 
+      fetch: dest=/home/ec2-user/file.txt src=/root/file.txt
